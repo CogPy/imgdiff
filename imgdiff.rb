@@ -8,7 +8,7 @@ images = [
   ChunkyPNG::Image.from_file('new.png')
 ]
 
-output = ChunkyPNG::Image.new(images.first.width, images.last.height, WHITE)
+output = ChunkyPNG::Image.new(images.first.width, images.last.height)
 
 images.first.height.times do |y|
   images.first.row(y).each_with_index do |pixel, x|
@@ -19,17 +19,18 @@ images.first.height.times do |y|
         (b(images.last[x,y]) - b(pixel)) ** 2
       ) / Math.sqrt(MAX ** 2 * 3)
 
-    output[x,y] = to_grayscale(images.last[x,y])
+    output[x,y] = fade(images.last[x,y], (MAX*1.0).floor)
 
     if score > 0
       diff = (r(images.last[x,y]) - r(pixel)) + 
         (g(images.last[x,y]) - g(pixel)) +
         (b(images.last[x,y]) - b(pixel))
       if diff > 0
-        output[x,y] = rgb(MAX,0,0)
+          fg = rgba(MAX,0,0, (MAX*0.5).floor)
       else
-        output[x,y] = rgb(0,MAX,0)
+          fg = rgba(0,MAX,0, (MAX*0.5).floor)
       end
+      output[x,y] = compose_quick(fg, output[x,y])
     end
   end
 end
