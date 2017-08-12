@@ -4,8 +4,8 @@ require 'chunky_png'
 include ChunkyPNG::Color
 
 images = [
-  ChunkyPNG::Image.from_file('old.png'),
-  ChunkyPNG::Image.from_file('new.png')
+  ChunkyPNG::Image.from_file(ARGV[1]),
+  ChunkyPNG::Image.from_file(ARGV[0])
 ]
 
 output = ChunkyPNG::Image.new(images.first.width, images.last.height)
@@ -35,6 +35,6 @@ images.first.height.times do |y|
   end
 end
 
-output.save('diff.png')
+output.save(ARGV[2])
 
 
